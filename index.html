@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Login e Cadastro</title>
+<style>
+body{font-family:Arial; background:#f2f2f2; display:flex; justify-content:center; align-items:center; height:100vh;}
+.container{background:white; padding:30px; border-radius:10px; width:350px; box-shadow:0 0 10px rgba(0,0,0,0.2);}
+input{width:100%; padding:10px; margin-top:10px; border-radius:5px; border:1px solid #ccc;}
+button{width:100%; padding:10px; margin-top:15px; background:#ff7a00; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;}
+button:hover{background:#e66d00;}
+#mensagem{margin-top:15px; font-weight:bold;}
+.link{text-align:center; margin-top:10px;}
+.link a{color:#007BFF; cursor:pointer; text-decoration:none;}
+.link a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>Login / Cadastro</h2>
+
+<input type="email" id="email" placeholder="Digite seu email">
+<input type="password" id="senha" placeholder="Digite sua senha">
+
+<button onclick="cadastrar()">Cadastrar</button>
+<button onclick="login()">Entrar</button>
+
+<div class="link">
+<a onclick="esqueciSenha()">Esqueci minha senha</a>
+</div>
+
+<div id="mensagem"></div>
+</div>
+
+<script>
+const API = "http://localhost:3000"
+const msgDiv = document.getElementById("mensagem")
+
+// CADASTRO
+async function cadastrar(){
+    const email = document.getElementById("email").value
+    const senha = document.getElementById("senha").value
+    msgDiv.textContent = ""
+    if(!email || !senha){
+        msgDiv.textContent = "Preencha todos os campos"
+        msgDiv.style.color = "red"
+        return
+    }
+
+    try{
+        const resp = await fetch(API+"/usuarios",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({email, senha})
+        })
+        const dados = await resp.json()
+        if(resp.ok){
+            msgDiv.textContent = dados.msg
+            msgDiv.style.color = "green"
+        } else {
+            msgDiv.textContent = dados.erro
+            msgDiv.style.color = "red"
+        }
+    } catch(err){
+        msgDiv.textContent = "Erro de conexão com o servidor"
+        msgDiv.style.color = "red"
+    }
+}
+
+// LOGIN
+async function login(){
+    const email = document.getElementById("email").value
+    const senha = document.getElementById("senha").value
+    msgDiv.textContent = ""
+    if(!email || !senha){
+        msgDiv.textContent = "Preencha todos os campos"
+        msgDiv.style.color = "red"
+        return
+    }
+
+    try{
+        const resp = await fetch(API+"/login",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({email, senha})
+        })
+        const dados = await resp.json()
+        if(resp.ok){
+            msgDiv.textContent = dados.msg
+            msgDiv.style.color = "green"
+        } else {
+            msgDiv.textContent = dados.erro
+            msgDiv.style.color = "red"
+        }
+    } catch(err){
+        msgDiv.textContent = "Erro de conexão com o servidor"
+        msgDiv.style.color = "red"
+    }
+}
+
+// ESQUECI SENHA
+async function esqueciSenha(){
+    const email = prompt("Digite seu email para recuperar a senha:")
+    msgDiv.textContent = ""
+    if(!email){
+        msgDiv.textContent = "Informe um email válido"
+        msgDiv.style.color = "red"
+        return
+    }
+
+    try{
+        const resp = await fetch(API+"/recuperar-senha",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({email})
+        })
+        const dados = await resp.json()
+        if(resp.ok){
+            msgDiv.textContent = dados.msg
+            msgDiv.style.color = "green"
+        } else {
+            msgDiv.textContent = dados.erro
+            msgDiv.style.color = "red"
+        }
+    } catch(err){
+        msgDiv.textContent = "Erro de conexão com o servidor"
+        msgDiv.style.color = "red"
+    }
+}
+</script>
+
+</body>
+</html>
