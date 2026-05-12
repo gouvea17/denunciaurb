@@ -1,96 +1,172 @@
-const express = require('express')
-const cors = require('cors')
-const bcrypt = require('bcrypt')
-const path = require('path')
-const db = require('./db')
+const express = require('express');
+const mysql = require('mysql2/promise');
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const path = require('path');
+require('dotenv').config();
 
-const app = express()
-const porta = 3000
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json())
-app.use(cors())
-app.use(express.static(path.join(__dirname, 'frontend')))
+// Banco de dados
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'denuncia_urbana_novo',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session
+app.use(session({
+  secret: 'chave_super_secreta_2024',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 }
+}));
+
+// Servir arquivos do frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Rotas das páginas
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'index.html'))
-})
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
 
 app.get('/login.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'login.html'))
-})
-
-app.get('/register.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'register.html'))
-})
+  res.sendFile(path.join(__dirname, '../frontend/login.html'));
+});
 
 app.get('/home.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'home.html'))
-})
+  res.sendFile(path.join(__dirname, '../frontend/home.html'));
+});
 
-// API: Cadastro (sem nome)
-app.post('/usuarios', async (req, res) => {
-    const { email, senha } = req.body
+// ========== ROTA PARA BUSCAR DENÚNCIAS ==========
+app.get('/denuncias', async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT * FROM denuncias 
+      ORDER BY dataCriacao DESC
+    `);
+    
+    res.json(rows);
+  } catch (error) {
+    console.error('Erro ao buscar denúncias:', error);
+    res.json([]);
+  }
+});
 
-    if (!email || !senha) {
-        return res.status(400).json({ erro: "Email e senha são obrigatórios" })
+// ========== ROTA PARA CRIAR DENÚNCIA ==========
+app.post('/denuncias', async (req, res) => {
+  try {
+    const { titulo, descricao, localizacao, tipo } = req.body;
+    
+    // Verifica se o usuário está logado
+    if (!req.session.usuario) {
+      return res.status(401).json({ error: 'Usuário não autenticado' });
     }
+    
+    const [result] = await pool.query(`
+      INSERT INTO denuncias (titulo, descricao, localizacao, tipo, status, votos, email_criador, dataCriacao) 
+      VALUES (?, ?, ?, ?, 'active', 0, ?, NOW())
+    `, [titulo, descricao, localizacao, tipo, req.session.usuario.email]);
+    
+    res.status(201).json({ 
+      success: true, 
+      id: result.insertId,
+      message: 'Denúncia criada com sucesso!' 
+    });
+  } catch (error) {
+    console.error('Erro ao criar denúncia:', error);
+    res.status(500).json({ error: 'Erro ao criar denúncia' });
+  }
+});
 
-    const hash = await bcrypt.hash(senha, 10)
-
-    db.query(
-        `INSERT INTO usuarios (email, senha) VALUES (?, ?)`,
-        [email, hash],
-        (err) => {
-            if (err) {
-                if (err.code === 'ER_DUP_ENTRY') {
-                    return res.status(400).json({ erro: "Email já cadastrado!" })
-                }
-                return res.status(500).json({ erro: "Erro ao cadastrar usuário" })
-            }
-            res.json({ msg: "Usuário cadastrado com sucesso" })
-        }
-    )
-})
-
-// API: Login
-app.post('/login', async (req, res) => {
-    const { email, senha } = req.body
-
-    if (!email || !senha) {
-        return res.status(400).json({ erro: "Email e senha são obrigatórios" })
+// ========== ROTA PARA VOTAR/APOIAR DENÚNCIA ==========
+app.post('/denuncias/:id/votar', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Verifica se o usuário está logado
+    if (!req.session.usuario) {
+      return res.status(401).json({ error: 'Usuário não autenticado' });
     }
+    
+    // Incrementa os votos
+    const [result] = await pool.query(`
+      UPDATE denuncias SET votos = votos + 1 WHERE id = ?
+    `, [id]);
+    
+    res.json({ success: true, message: 'Voto computado!' });
+  } catch (error) {
+    console.error('Erro ao votar:', error);
+    res.status(500).json({ error: 'Erro ao votar' });
+  }
+});
 
-    db.query(
-        `SELECT * FROM usuarios WHERE email = ?`,
-        [email],
-        async (err, resultados) => {
-            if (err) {
-                console.error('Erro no banco:', err)
-                return res.status(500).json({ erro: "Erro no servidor" })
-            }
-            
-            if (resultados.length === 0) {
-                return res.status(404).json({ erro: "Usuário não encontrado" })
-            }
-            
-            const usuario = resultados[0]
-            const senhaValida = await bcrypt.compare(senha, usuario.senha)
+// ========== ROTA DE LOGIN ==========
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    const [rows] = await pool.query('SELECT * FROM usuarios WHERE email = ?', [email]);
+    
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Email ou senha incorretos' });
+    }
+    
+    const usuario = rows[0];
+    const senhaValida = await bcrypt.compare(password, usuario.senha);
+    
+    if (senhaValida) {
+      req.session.usuario = {
+        id: usuario.id,
+        email: usuario.email,
+        nome: usuario.nome
+      };
+      
+      // Salva também no localStorage para o frontend
+      res.json({ 
+        success: true, 
+        message: 'Login realizado',
+        user: { email: usuario.email, nome: usuario.nome }
+      });
+    } else {
+      res.status(401).json({ error: 'Email ou senha incorretos' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+});
 
-            if (!senhaValida) {
-                return res.status(401).json({ erro: "Senha incorreta" })
-            }
+// ========== ROTA DE LOGOUT ==========
+app.post('/api/logout', (req, res) => {
+  req.session.destroy();
+  res.json({ message: 'Logout realizado' });
+});
 
-            const token = "token-" + usuario.id
+// ========== VERIFICAR SESSÃO ==========
+app.get('/api/check-session', (req, res) => {
+  if (req.session.usuario) {
+    res.json({ loggedIn: true, user: req.session.usuario });
+  } else {
+    res.json({ loggedIn: false });
+  }
+});
 
-            res.json({
-                msg: "Login realizado com sucesso",
-                token: token
-            })
-        }
-    )
-})
+// ========== TESTE ==========
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Backend funcionando!' });
+});
 
-app.listen(porta, () => {
-    console.log("Servidor rodando na porta " + porta)
-    console.log("Acesse: http://localhost:3000")
-})
+// Iniciar servidor
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+});

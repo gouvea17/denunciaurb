@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Denúncia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #faf9f7;
+            font-family: 'Inter', sans-serif;
+            color: #2d2a26;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #e5e0d8;
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .card h2 { margin-bottom: 5px; font-size: 1.4rem; }
+        .card p { color: #6b6560; margin-bottom: 20px; font-size: 0.9rem; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 5px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #e5e0d8;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            background: #faf9f7;
+        }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #3b5d4f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn:hover { background: #2e4a3f; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .msg { padding: 10px; border-radius: 8px; margin-bottom: 15px; display: none; font-size: 0.85rem; }
+        .msg-error { background: #fdedec; color: #b54b4b; border: 1px solid #f5c6cb; }
+        .msg-success { background: #eaf5ea; color: #5b8c5a; border: 1px solid #c3e6c3; }
+        .back { text-align: center; margin-top: 15px; }
+        .back a { color: #3b5d4f; text-decoration: none; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Nova Denúncia</h2>
+        <p>Descreva o problema que você encontrou</p>
+
+        <div class="msg msg-error" id="msgError"></div>
+        <div class="msg msg-success" id="msgSuccess"></div>
+
+        <form id="form">
+            <div class="form-group">
+                <label>Título</label>
+                <input type="text" id="titulo" placeholder="Ex: Buraco na rua" required>
+            </div>
+            <div class="form-group">
+                <label>Tipo</label>
+                <select id="tipo" required>
+                    <option value="">Selecione...</option>
+                    <option value="Buraco">Buraco</option>
+                    <option value="Iluminação">Iluminação</option>
+                    <option value="Lixo">Lixo</option>
+                    <option value="Saneamento">Saneamento</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="descricao" placeholder="Descreva o problema..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Localização</label>
+                <input type="text" id="localizacao" placeholder="Ex: Rua das Flores, 123" required>
+            </div>
+            <button type="submit" class="btn" id="btn">Enviar Denúncia</button>
+        </form>
+        <div class="back"><a href="home.html">Voltar</a></div>
+    </div>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btn');
+            const titulo = document.getElementById('titulo').value.trim();
+            const tipo = document.getElementById('tipo').value;
+            const descricao = document.getElementById('descricao').value.trim();
+            const localizacao = document.getElementById('localizacao').value.trim();
+            
+            document.getElementById('msgError').style.display = 'none';
+            document.getElementById('msgSuccess').style.display = 'none';
+            
+            if (!titulo || !tipo || !descricao || !localizacao) {
+                document.getElementById('msgError').textContent = 'Preencha todos os campos.';
+                document.getElementById('msgError').style.display = 'block';
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+            
+            try {
+                const resposta = await fetch('http://localhost:3000/api/denuncias', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ titulo, tipo, descricao, localizacao })
+                });
+                
+                const dados = await resposta.json();
+                
+                if (resposta.ok) {
+                    document.getElementById('msgSuccess').textContent = 'Denúncia criada! Redirecionando...';
+                    document.getElementById('msgSuccess').style.display = 'block';
+                    setTimeout(() => { window.location.href = 'home.html'; }, 1500);
+                } else {
+                    document.getElementById('msgError').textContent = dados.erro || 'Erro ao criar.';
+                    document.getElementById('msgError').style.display = 'block';
+                }
+            } catch (erro) {
+                document.getElementById('msgError').textContent = 'Erro no servidor.';
+                document.getElementById('msgError').style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Enviar Denúncia';
+            }
+        });
+    </script>
+</body>
+</html>

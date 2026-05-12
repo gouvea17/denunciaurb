@@ -1,203 +1,471 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Denuncia Urbana - Cidade mais justa</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Denúncias Urbanas - Sua voz transforma sua cidade</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg: #faf9f7;
+            --text: #2d2a26;
+            --text-light: #6b6560;
+            --border: #e5e0d8;
+            --primary: #3b5d4f;
+            --primary-hover: #2e4a3f;
+            --accent: #c67b4b;
+            --radius: 16px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .navbar-brand i { font-size: 1.6rem; }
+
+        .navbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(59,93,79,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(160deg, #1f332b 0%, #2e4a3f 40%, #3b5d4f 100%);
+            color: #fff;
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 60%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.85;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero .btn-primary {
+            background: #fff;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 14px 28px;
+            font-size: 1rem;
+        }
+
+        .hero .btn-primary:hover {
+            background: #f0ede8;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .hero .btn-outline {
+            border-color: rgba(255,255,255,0.6);
+            color: #fff;
+            padding: 14px 28px;
+            font-size: 1rem;
+        }
+
+        .hero .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #fff;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .hero-stat-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        /* Seções */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Como Funciona */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            background: #e8f0eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .step-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-card p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .feature-item i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        .feature-item h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-item p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* CTA */
+        .cta-section {
+            background: linear-gradient(160deg, #3b5d4f, #2e4a3f);
+            color: #fff;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            opacity: 0.85;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+            font-weight: 300;
+        }
+
+        .cta-section .btn-primary {
+            background: #fff;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 14px 32px;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #fff;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .footer strong { color: var(--text); }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .hero-stats { gap: 1.5rem; }
+            .hero-stat-number { font-size: 1.8rem; }
+            .navbar { padding: 0 1rem; }
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Navbar -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>Denuncia Urbana</span>
-            </div>
-            <div class="nav-links">
-                <a href="#home">Início</a>
-                <a href="#sobre">Quem Somos</a>
-                <a href="#produto">Produto</a>
-                <a href="#contato">Contato</a>
-                <a href="login.html" class="btn-login">
-                    <i class="fas fa-user"></i> Login
-                </a>
-            </div>
+        <a href="/" class="navbar-brand">
+            <i class="bi bi-geo-alt-fill"></i> Denúncias Urbanas
+        </a>
+        <div class="navbar-actions">
+            <a href="login.html" class="btn btn-outline">Entrar</a>
+            <a href="register.html" class="btn btn-primary">Cadastrar</a>
         </div>
     </nav>
 
-    <section id="home" class="hero">
+    <!-- Hero -->
+    <header class="hero">
         <div class="hero-content">
-            <h1>Sua voz transforma a <span class="destaque">cidade</span></h1>
-            <p>Plataforma de denúncias urbanas. Registre problemas da sua cidade e ajude a construir um lugar melhor para todos.</p>
+            <h1>Sua voz transforma a cidade</h1>
+            <p>
+                Relate problemas urbanos da sua região, acompanhe o andamento e ajude 
+                a construir uma comunidade mais justa e participativa.
+            </p>
             <div class="hero-buttons">
-                <a href="register.html" class="btn-primary">
-                    <i class="fas fa-user-plus"></i> Cadastre-se
+                <a href="register.html" class="btn btn-primary">
+                    <i class="bi bi-person-plus"></i> Começar agora
                 </a>
-                <a href="login.html" class="btn-secondary">
-                    <i class="fas fa-sign-in-alt"></i> Já tenho conta
+                <a href="login.html" class="btn btn-outline">
+                    <i class="bi bi-box-arrow-in-right"></i> Já tenho conta
                 </a>
             </div>
-        </div>
-        <div class="hero-image">
-            <i class="fas fa-city"></i>
-        </div>
-    </section>
-
-    <section id="sobre" class="sobre">
-        <div class="container">
-            <div class="section-header">
-                <h2>Quem <span class="destaque">Somos</span></h2>
-                <p>Conheça nossa história e missão</p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number">50.000+</div>
+                    <div class="hero-stat-label">Denúncias registradas</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">78%</div>
+                    <div class="hero-stat-label">Taxa de resolução</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">25.000+</div>
+                    <div class="hero-stat-label">Cidadãos ativos</div>
+                </div>
             </div>
-            <div class="sobre-content">
-                <div class="sobre-texto">
-                    <h3>Transformando cidadãos em agentes de mudança</h3>
-                    <p>Somos uma plataforma inovadora que conecta cidadãos ao poder público, facilitando a comunicação de problemas urbanos. Desde 2020, já ajudamos a resolver mais de 50.000 problemas em todo o Brasil.</p>
-                    <div class="stats">
-                        <div class="stat">
-                            <i class="fas fa-bullhorn"></i>
-                            <h4>50.000+</h4>
-                            <p>Denúncias registradas</p>
-                        </div>
-                        <div class="stat">
-                            <i class="fas fa-check-circle"></i>
-                            <h4>78%</h4>
-                            <p>Taxa de resolução</p>
-                        </div>
-                        <div class="stat">
-                            <i class="fas fa-users"></i>
-                            <h4>25.000+</h4>
-                            <p>Usuários ativos</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="sobre-missao">
-                    <div class="missao-card">
-                        <i class="fas fa-eye"></i>
-                        <h3>Missão</h3>
-                        <p>Empoderar cidadãos para transformar problemas urbanos em soluções concretas.</p>
-                    </div>
-                    <div class="missao-card">
-                        <i class="fas fa-bullseye"></i>
-                        <h3>Visão</h3>
-                        <p>Ser a maior plataforma de participação cidadã da América Latina.</p>
-                    </div>
-                    <div class="missao-card">
-                        <i class="fas fa-heart"></i>
-                        <h3>Valores</h3>
-                        <p>Transparência, agilidade, compromisso com a cidade e cidadania ativa.</p>
-                    </div>
-                </div>
+        </div>
+    </header>
+
+    <!-- Como Funciona -->
+    <section class="section">
+        <h2 class="section-title">Como funciona</h2>
+        <p class="section-subtitle">Em apenas três passos, você ajuda a transformar sua cidade</p>
+        <div class="steps">
+            <div class="step-card">
+                <div class="step-icon"><i class="bi bi-camera"></i></div>
+                <h3>1. Registre</h3>
+                <p>Descreva o problema, tire uma foto e marque a localização exata.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon"><i class="bi bi-people"></i></div>
+                <h3>2. Mobilize</h3>
+                <p>Compartilhe e receba votos da comunidade para dar visibilidade.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon"><i class="bi bi-check2-circle"></i></div>
+                <h3>3. Acompanhe</h3>
+                <p>A prefeitura é notificada e você acompanha até a solução final.</p>
             </div>
         </div>
     </section>
 
-    <section id="produto" class="produto">
-        <div class="container">
-            <div class="section-header">
-                <h2>Problemas que você pode <span class="destaque">denunciar</span></h2>
-                <p>Tipos de problemas urbanos que nossa plataforma atende</p>
-            </div>
-            <div class="produto-grid">
-                <div class="produto-card">
-                    <i class="fas fa-lightbulb"></i>
-                    <h3>Iluminação Pública</h3>
-                    <p>Postes apagados ou piscando</p>
+    <!-- Por que participar -->
+    <section class="section" style="background: #fff; max-width: 100%; padding: 5rem 2rem;">
+        <div style="max-width: 1100px; margin: 0 auto;">
+            <h2 class="section-title">Por que participar?</h2>
+            <p class="section-subtitle">Sua participação faz a diferença real na sua comunidade</p>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="bi bi-shield-check"></i>
+                    <div>
+                        <h4>Transparência total</h4>
+                        <p>Acompanhe cada etapa do processo, desde o registro até a resolução.</p>
+                    </div>
                 </div>
-                <div class="produto-card">
-                    <i class="fas fa-road"></i>
-                    <h3>Buraco na Via</h3>
-                    <p>Ruas esburacadas e danificadas</p>
+                <div class="feature-item">
+                    <i class="bi bi-lightning-charge"></i>
+                    <div>
+                        <h4>Agilidade</h4>
+                        <p>Denúncias com mais votos ganham prioridade no atendimento público.</p>
+                    </div>
                 </div>
-                <div class="produto-card">
-                    <i class="fas fa-trash-alt"></i>
-                    <h3>Lixo/Entulho</h3>
-                    <p>Acúmulo de lixo em vias públicas</p>
+                <div class="feature-item">
+                    <i class="bi bi-heart"></i>
+                    <div>
+                        <h4>Impacto social</h4>
+                        <p>Cada denúncia resolvida melhora a qualidade de vida de toda a vizinhança.</p>
+                    </div>
                 </div>
-                <div class="produto-card">
-                    <i class="fas fa-toilet"></i>
-                    <h3>Esgoto a Céu Aberto</h3>
-                    <p>Vazamento de esgoto na rua</p>
-                </div>
-                <div class="produto-card">
-                    <i class="fas fa-tree"></i>
-                    <h3>Poda de Árvore</h3>
-                    <p>Árvores precisando de manutenção</p>
-                </div>
-                <div class="produto-card">
-                    <i class="fas fa-dog"></i>
-                    <h3>Animais Soltos</h3>
-                    <p>Animais abandonados ou soltos</p>
+                <div class="feature-item">
+                    <i class="bi bi-graph-up"></i>
+                    <div>
+                        <h4>Dados abertos</h4>
+                        <p>Estatísticas públicas ajudam a identificar problemas recorrentes na cidade.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="contato" class="contato">
-        <div class="container">
-            <div class="section-header">
-                <h2>Entre em <span class="destaque">Contato</span></h2>
-                <p>Tem dúvidas? Fale conosco</p>
-            </div>
-            <div class="contato-content">
-                <div class="contato-info">
-                    <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <h4>Email</h4>
-                        <p>contato@denunciamais.com.br</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-phone"></i>
-                        <h4>Telefone</h4>
-                        <p>(11) 99999-9999</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fab fa-whatsapp"></i>
-                        <h4>WhatsApp</h4>
-                        <p>(11) 98888-8888</p>
-                    </div>
-                </div>
-                <form class="contato-form">
-                    <input type="text" placeholder="Seu nome" required>
-                    <input type="email" placeholder="Seu email" required>
-                    <textarea placeholder="Sua mensagem" rows="5" required></textarea>
-                    <button type="submit" class="btn-primary">Enviar Mensagem</button>
-                </form>
-            </div>
-        </div>
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>Pronto para fazer a diferença?</h2>
+        <p>Junte-se a milhares de cidadãos que estão transformando suas cidades todos os dias.</p>
+        <a href="register.html" class="btn btn-primary">
+            <i class="bi bi-person-plus"></i> Criar minha conta gratuita
+        </a>
     </section>
 
+    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>Denuncia+</span>
-                    <p>Juntos podemos transformar nossa cidade</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Links Rápidos</h4>
-                    <a href="#home">Início</a>
-                    <a href="#sobre">Quem Somos</a>
-                    <a href="#produto">Produto</a>
-                </div>
-                <div class="footer-social">
-                    <h4>Redes Sociais</h4>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Denuncia+ - Transformando cidades com cidadania ativa</p>
-            </div>
-        </div>
+        <p>Feito com <i class="bi bi-heart-fill" style="color: #b54b4b;"></i> para construir cidades melhores</p>
+        <p style="margin-top: 0.5rem;">© 2026 <strong>Denúncias Urbanas</strong> · Todos os direitos reservados</p>
     </footer>
 
-    <script src="js/script.js"></script>
 </body>
 </html>

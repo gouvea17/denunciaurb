@@ -1,49 +1,316 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Denuncia+</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Login - Denúncias Urbanas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #faf9f7;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            color: #2d2a26;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #6b6560;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2d2a26;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b5d4f;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #3b5d4f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #2e4a3f;
+        }
+
+        .links {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .links a {
+            color: #3b5d4f;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .success {
+            background: #efe;
+            color: #3b5d4f;
+            border: 1px solid #beb;
+        }
+
+        .loading {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+        }
+    </style>
 </head>
-<body class="auth-page">
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h2>Bem-vindo de volta!</h2>
-                <p>Faça login para continuar</p>
+<body>
+    <div class="login-container">
+        <h2>Bem-vindo de volta</h2>
+        <p class="subtitle">Entre para continuar contribuindo com sua cidade</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="seu@email.com" 
+                    required 
+                    value="drigouvea@gmail.com"
+                >
             </div>
             
-            <form id="loginForm" class="auth-form">
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" placeholder="Seu email" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="senha" placeholder="Sua senha" required>
-                </div>
-                
-                <button type="submit" class="btn-primary">
-                    <i class="fas fa-sign-in-alt"></i> Entrar
-                </button>
-            </form>
-            
-            <div id="message" class="message"></div>
-            
-            <div class="auth-footer">
-                <p>Não tem uma conta? <a href="register.html">Cadastre-se</a></p>
-                <a href="index.html" class="back-home">
-                    <i class="fas fa-arrow-left"></i> Voltar para Home
-                </a>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="••••••••" 
+                    required
+                >
             </div>
+            
+            <button type="submit">Entrar</button>
+        </form>
+        
+        <div class="links">
+            <a href="register.html">Não tem uma conta? Cadastre-se</a><br>
+            <a href="index.html">← Voltar para Home</a>
         </div>
+        
+        <div id="messageContainer"></div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script>
+        // Configuração do backend
+        const API_URL = 'http://localhost:3000';
+        
+        // Elementos do DOM
+        const loginForm = document.getElementById('loginForm');
+        const messageContainer = document.getElementById('messageContainer');
+        
+        // Função para mostrar mensagens
+        function showMessage(text, type) {
+            messageContainer.innerHTML = `
+                <div class="message ${type}">
+                    ${text}
+                </div>
+            `;
+            
+            // Remove a mensagem após 5 segundos (exceto loading)
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    if (messageContainer.firstChild) {
+                        messageContainer.innerHTML = '';
+                    }
+                }, 5000);
+            }
+        }
+        
+        // Função para testar conexão com o backend
+        async function testBackendConnection() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(`${API_URL}/api/test`, {
+                    method: 'GET',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    console.log('✅ Backend conectado com sucesso');
+                    return true;
+                } else {
+                    console.log('❌ Backend respondeu com erro:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Erro ao conectar com backend:', error);
+                return false;
+            }
+        }
+        
+        // Evento de submit do formulário
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showMessage('Por favor, preencha todos os campos', 'error');
+                return;
+            }
+            
+            showMessage('Verificando credenciais...', 'loading');
+            
+            try {
+                const submitButton = loginForm.querySelector('button');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Entrando...';
+                
+                const isBackendOnline = await testBackendConnection();
+                if (!isBackendOnline) {
+                    showMessage(
+                        'Erro ao conectar com o servidor. Verifique se o backend está rodando em ' + API_URL,
+                        'error'
+                    );
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Entrar';
+                    return;
+                }
+                
+                const response = await fetch(`${API_URL}/api/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        email: email, 
+                        password: password 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+                    
+                    if (data.user) {
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = '/home.html';
+                    }, 1000);
+                } else {
+                    let errorMessage = 'Email ou senha incorretos';
+                    if (data.error) {
+                        errorMessage = data.error;
+                    }
+                    showMessage(errorMessage, 'error');
+                    document.getElementById('password').value = '';
+                }
+                
+            } catch (error) {
+                console.error('Erro detalhado:', error);
+                showMessage(
+                    'Erro de conexão. Verifique se o servidor está rodando em ' + API_URL,
+                    'error'
+                );
+            } finally {
+                const submitButton = loginForm.querySelector('button');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Entrar';
+            }
+        });
+        
+        // Teste automático ao carregar a página
+        window.addEventListener('load', async () => {
+            console.log('🚀 Página de login carregada');
+            const isConnected = await testBackendConnection();
+            if (isConnected) {
+                console.log('✅ Backend está rodando normalmente');
+            } else {
+                console.log('⚠️ Backend não detectado');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,128 +1,734 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Denuncia+</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Denúncias Urbanas - Sua voz transforma sua cidade</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        .dashboard {
-            margin-top: 80px;
-            padding: 2rem 10%;
+        :root {
+            --bg: #faf9f7;
+            --card-bg: #ffffff;
+            --text: #2d2a26;
+            --text-light: #6b6560;
+            --border: #e5e0d8;
+            --primary: #3b5d4f;
+            --primary-hover: #2e4a3f;
+            --accent: #c67b4b;
+            --danger: #b54b4b;
+            --success: #5b8c5a;
+            --warning: #d4953a;
+            --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.06);
+            --radius: 12px;
         }
-        
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 3rem;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .welcome-section h1 {
-            font-size: 2rem;
-            color: #333;
+
+        body {
+            background: var(--bg);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        
-        .welcome-section span {
-            color: #e74c3c;
+
+        /* Navbar */
+        .navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
         }
-        
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .info-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        
-        .info-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .info-card i {
-            font-size: 3rem;
-            color: #e74c3c;
-            margin-bottom: 1rem;
-        }
-        
-        .user-name {
-            color: #e74c3c;
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
             font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
         }
-        
-        .btn-denuncia {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-size: 1rem;
+
+        .navbar-brand i {
+            font-size: 1.5rem;
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-user .user-name {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .navbar-user .user-name strong {
+            color: var(--text);
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.3s;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        
-        .btn-denuncia:hover {
+
+        .btn-logout:hover {
+            background: #f5f3f0;
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(160deg, #3b5d4f 0%, #2e4a3f 40%, #1f332b 100%);
+            color: #fff;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.85;
+            max-width: 550px;
+            margin: 0 auto 2rem;
+            font-weight: 300;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .hero-stat-label {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            font-weight: 300;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-outline {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: #f5f3f0;
+        }
+
+        .btn-outline.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .filter-select {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text);
+            background: var(--card-bg);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Cards */
+        .denuncias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+
+        .denuncia-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: all 0.2s;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .denuncia-card:hover {
+            box-shadow: var(--shadow-hover);
             transform: translateY(-2px);
+        }
+
+        .denuncia-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .denuncia-card .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            flex: 1;
+            margin-right: 8px;
+        }
+
+        .denuncia-card .card-type {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .type-buraco { background: #fdf2e9; color: #b8742e; }
+        .type-iluminacao { background: #fef9e7; color: #b8960c; }
+        .type-lixo { background: #fdedec; color: #b5534e; }
+        .type-saneamento { background: #eaf2f8; color: #3b6e8e; }
+        .type-outros { background: #f4ecf7; color: #6c4d7c; }
+        .type-default { background: #f5f3f0; color: #6b6560; }
+
+        .denuncia-card .card-body {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .denuncia-card .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+
+        .denuncia-card .card-meta i {
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .status-pendente { background: #fef9e7; color: #b8960c; }
+        .status-em_andamento { background: #eaf2f8; color: #3b6e8e; }
+        .status-resolvida { background: #eaf5ea; color: #5b8c5a; }
+
+        .btn-vote {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-vote:hover {
+            background: #f5f3f0;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-vote.voted {
+            background: #fdf2e9;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0.4;
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 3rem;
+        }
+
+        .footer strong {
+            color: var(--text);
+        }
+
+        /* About Section */
+        .about-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .about-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .about-section p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .about-feature {
+            text-align: center;
+        }
+
+        .about-feature i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .about-feature h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .about-feature span {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0ede8 25%, #e8e4df 50%, #f0ede8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.75rem; }
+            .hero-stats { gap: 1.5rem; }
+            .denuncias-grid { grid-template-columns: 1fr; }
+            .controls { flex-direction: column; }
+            .navbar { padding: 0 1rem; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Navbar -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>Denuncia+</span>
-            </div>
-            <div class="nav-links">
-                <span id="userNome" class="user-name"></span>
-                <button onclick="logout()" class="btn-login">
-                    <i class="fas fa-sign-out-alt"></i> Sair
-                </button>
-            </div>
+        <a href="/home.html" class="navbar-brand">
+            <i class="bi bi-geo-alt-fill"></i> Denúncias Urbanas
+        </a>
+        <div class="navbar-user">
+            <span class="user-name">Bem-vindo(a), <strong id="nomeUsuario">Cidadão</strong></span>
+            <button class="btn-logout" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i> Sair
+            </button>
         </div>
     </nav>
 
-    <div class="dashboard">
-        <div class="welcome-section">
-            <h1>Olá, <span id="welcomeNome"></span>!</h1>
-            <p>Bem-vindo à plataforma de denúncias urbanas</p>
-            <p style="margin-top: 1rem; font-size: 1.1rem;">Sua participação é fundamental para uma cidade melhor!</p>
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Sua voz transforma a cidade</h1>
+        <p>Relate problemas urbanos da sua região e ajude a construir uma comunidade melhor para todos nós.</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-number" id="statDenuncias">0</div>
+                <div class="hero-stat-label">Denúncias registradas</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number" id="statResolvidas">0</div>
+                <div class="hero-stat-label">Problemas resolvidos</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-number" id="statUsuarios">0</div>
+                <div class="hero-stat-label">Cidadãos ativos</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conteúdo Principal -->
+    <div class="container">
+
+        <!-- Seção Quem Somos -->
+        <section class="about-section">
+            <h2>Transformando cidadãos em agentes de mudança</h2>
+            <p>
+                Somos uma plataforma que conecta você diretamente aos órgãos responsáveis pela nossa cidade. 
+                Acreditamos que cada cidadão tem o poder de fazer a diferença. Quando você relata um problema 
+                — seja um buraco na rua, uma lâmpada queimada ou qualquer outra situação — você não está 
+                apenas reclamando: está contribuindo ativamente para uma cidade melhor.
+            </p>
+            <div class="about-features">
+                <div class="about-feature">
+                    <i class="bi bi-shield-check"></i>
+                    <h4>Transparência</h4>
+                    <span>Acompanhe o status de cada denúncia em tempo real</span>
+                </div>
+                <div class="about-feature">
+                    <i class="bi bi-people"></i>
+                    <h4>Comunidade</h4>
+                    <span>Vote em problemas que afetam mais pessoas</span>
+                </div>
+                <div class="about-feature">
+                    <i class="bi bi-lightning-charge"></i>
+                    <h4>Agilidade</h4>
+                    <span>Denúncias populares ganham prioridade</span>
+                </div>
+                <div class="about-feature">
+                    <i class="bi bi-heart"></i>
+                    <h4>Impacto real</h4>
+                    <span>Milhares de problemas já foram resolvidos</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Denúncias Recentes -->
+        <h2 class="section-title">Denúncias da Comunidade</h2>
+        <p class="section-subtitle">Veja o que seus vizinhos estão relatando e contribua com seu voto</p>
+
+        <!-- Controles -->
+        <div class="controls">
+            <button class="btn btn-primary" id="novaDenunciaBtn">
+                <i class="bi bi-plus-lg"></i> Nova Denúncia
+            </button>
+            <button class="btn btn-outline active" onclick="filtrarDenuncias('todas')" id="btnTodas">
+                Todas
+            </button>
+            <button class="btn btn-outline" onclick="filtrarDenuncias('pendente')" id="btnPendente">
+                Pendentes
+            </button>
+            <button class="btn btn-outline" onclick="filtrarDenuncias('em_andamento')" id="btnEmAndamento">
+                Em Andamento
+            </button>
+            <button class="btn btn-outline" onclick="filtrarDenuncias('resolvida')" id="btnResolvida">
+                Resolvidas
+            </button>
+            <select class="filter-select" id="filtroStatus" onchange="filtrarDenuncias(this.value)">
+                <option value="todas">Filtrar por status...</option>
+                <option value="todas">Todas</option>
+                <option value="pendente">Pendentes</option>
+                <option value="em_andamento">Em Andamento</option>
+                <option value="resolvida">Resolvidas</option>
+            </select>
         </div>
 
-        <div class="dashboard-cards">
-            <div class="info-card">
-                <i class="fas fa-bullhorn"></i>
-                <h3>Faça uma Denúncia</h3>
-                <p>Registre problemas urbanos da sua cidade</p>
-                <button class="btn-denuncia" style="margin-top: 1rem;" onclick="alert('Em breve você poderá fazer denúncias!')">
-                    Nova Denúncia
-                </button>
-            </div>
-            
-            <div class="info-card">
-                <i class="fas fa-chart-line"></i>
-                <h3>Acompanhe</h3>
-                <p>Monitore o status das suas denúncias</p>
-                <p style="margin-top: 1rem; color: #666;">Em breve</p>
-            </div>
-            
-            <div class="info-card">
-                <i class="fas fa-trophy"></i>
-                <h3>Ranking</h3>
-                <p>Veja os cidadãos mais ativos</p>
-                <p style="margin-top: 1rem; color: #666;">Em breve</p>
+        <!-- Grid de Denúncias -->
+        <div class="denuncias-grid" id="denunciasGrid">
+            <!-- Carregando -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #6b6560;">
+                <i class="bi bi-hourglass-split" style="font-size: 2rem; display: block; margin-bottom: 0.5rem;"></i>
+                Carregando denúncias...
             </div>
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Feito com <i class="bi bi-heart-fill" style="color: #b54b4b;"></i> para construir cidades melhores</p>
+        <p style="margin-top: 0.5rem;">© 2026 <strong>Denúncias Urbanas</strong> · Todos os direitos reservados</p>
+    </footer>
+
+    <script>
+        const API_URL = 'http://localhost:3000';
+        let todasDenuncias = [];
+        let filtroAtual = 'todas';
+
+        // Verificar login
+        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+        if (!usuario.email) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('nomeUsuario').textContent = usuario.nome || 'Cidadão';
+
+        // Carregar denúncias
+        async function carregarDenuncias() {
+            try {
+                const resposta = await fetch(`${API_URL}/denuncias`);
+                todasDenuncias = await resposta.json();
+                renderizarDenuncias();
+                atualizarEstatisticas();
+            } catch (erro) {
+                console.error('Erro ao carregar denúncias:', erro);
+                document.getElementById('denunciasGrid').innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="bi bi-wifi-off"></i>
+                        <h3>Erro ao conectar</h3>
+                        <p>Verifique se o servidor está rodando em localhost:3000</p>
+                    </div>
+                `;
+            }
+        }
+
+        function atualizarEstatisticas() {
+            document.getElementById('statDenuncias').textContent = todasDenuncias.length;
+            const resolvidas = todasDenuncias.filter(d => d.status === 'resolvida').length;
+            document.getElementById('statResolvidas').textContent = resolvidas;
+            document.getElementById('statUsuarios').textContent = '2.500+';
+        }
+
+        function filtrarDenuncias(filtro) {
+            filtroAtual = filtro;
+            
+            // Atualizar botões
+            document.querySelectorAll('.btn-outline').forEach(btn => btn.classList.remove('active'));
+            const btnMap = {
+                'todas': 'btnTodas',
+                'pendente': 'btnPendente',
+                'em_andamento': 'btnEmAndamento',
+                'resolvida': 'btnResolvida'
+            };
+            if (btnMap[filtro]) {
+                document.getElementById(btnMap[filtro]).classList.add('active');
+            }
+            document.getElementById('filtroStatus').value = filtro;
+            
+            renderizarDenuncias();
+        }
+
+        function renderizarDenuncias() {
+            const grid = document.getElementById('denunciasGrid');
+            
+            const filtradas = filtroAtual === 'todas' 
+                ? todasDenuncias 
+                : todasDenuncias.filter(d => d.status === filtroAtual);
+
+            if (filtradas.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="bi bi-inbox"></i>
+                        <h3>Nenhuma denúncia encontrada</h3>
+                        <p>Seja o primeiro a registrar um problema na sua cidade!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtradas.map(d => `
+                <div class="denuncia-card">
+                    <div class="card-header">
+                        <span class="card-title">${escapeHtml(d.titulo)}</span>
+                        <span class="card-type ${getTipoClass(d.tipo)}">${escapeHtml(d.tipo || 'Outros')}</span>
+                    </div>
+                    <div class="card-body">${escapeHtml(d.descricao)}</div>
+                    <div class="card-meta">
+                        <span><i class="bi bi-geo-alt"></i> ${escapeHtml(d.localizacao)}</span>
+                        <span><i class="bi bi-person"></i> ${escapeHtml(d.email_criador ? d.email_criador.split('@')[0] : 'Anônimo')}</span>
+                        <span>${formatarData(d.dataCriacao)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                        <span class="status-badge status-${d.status}">${formatarStatus(d.status)}</span>
+                        <button class="btn-vote" onclick="apoiarDenuncia(${d.id})" id="voteBtn${d.id}">
+                            <i class="bi bi-hand-thumbs-up"></i> Apoiar (${d.votos || 0})
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function getTipoClass(tipo) {
+            const map = {
+                'Buraco': 'type-buraco',
+                'Iluminação': 'type-iluminacao',
+                'Lixo': 'type-lixo',
+                'Saneamento': 'type-saneamento',
+                'Outros': 'type-outros'
+            };
+            return map[tipo] || 'type-default';
+        }
+
+        function formatarStatus(status) {
+            const map = {
+                'pendente': 'Pendente',
+                'em_andamento': 'Em Andamento',
+                'resolvida': 'Resolvida'
+            };
+            return map[status] || status;
+        }
+
+        function formatarData(data) {
+            if (!data) return 'Data não informada';
+            return new Date(data).toLocaleDateString('pt-BR');
+        }
+
+        async function apoiarDenuncia(id) {
+            try {
+                const resposta = await fetch(`${API_URL}/denuncias/${id}/votar`, { method: 'POST' });
+                const dados = await resposta.json();
+                
+                if (resposta.ok) {
+                    // Atualiza localmente
+                    const denuncia = todasDenuncias.find(d => d.id === id);
+                    if (denuncia) denuncia.votos = (denuncia.votos || 0) + 1;
+                    
+                    const btn = document.getElementById('voteBtn' + id);
+                    if (btn) {
+                        btn.classList.add('voted');
+                        btn.innerHTML = `<i class="bi bi-hand-thumbs-up-fill"></i> Apoiado (${denuncia.votos})`;
+                    }
+                } else {
+                    alert(dados.erro || 'Erro ao votar');
+                }
+            } catch (erro) {
+                console.error('Erro ao votar:', erro);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+            } catch (e) {}
+            localStorage.removeItem('usuario');
+            window.location.href = 'login.html';
+        }
+
+        // Eventos
+        document.getElementById('novaDenunciaBtn').addEventListener('click', () => {
+            window.location.href = 'denuncia.html';
+        });
+
+        // Iniciar
+        carregarDenuncias();
+    </script>
 </body>
 </html>
